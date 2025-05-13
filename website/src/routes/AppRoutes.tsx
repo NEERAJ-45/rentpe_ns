@@ -11,13 +11,13 @@ import AccountDashboard from '@/pages/User/ProfileDashboard';
 import { ProfileManagement } from '@/pages/User/ProfileManagement';
 import { AccountManager } from '@/pages/User/AccountManager';
 import { BankDetails } from '@/pages/User/BankDetails';
-import { BusinessDetailsCard } from '@/pages/User/BuisnessDetails';
 // import { Settings } from '@/pages/User/Settings';
-import { CalendarPage } from '@/pages/User/Calendar';
-import { Partners } from '@/pages/User/Partner';
-import { Sessions } from '@/pages/User/Sessions';
-import { DeveloperAccessPage } from '@/pages/User/DeveloperAccess';
+import  CalendarPage  from '@/pages/User/Calendar';
+import  Partners  from '@/pages/User/Partner';
+import Sessions  from '@/pages/User/Sessions';
+import DeveloperAccessPage  from '@/pages/User/DeveloperAccess';
 import Settingss from "@/pages/User/Settings"
+import BuisnessDetails from "@/pages/User/BuisnessDetails"
 
 const AppRoutes: React.FC = () => {
     return (
@@ -47,7 +47,7 @@ const AppRoutes: React.FC = () => {
                             <Route path="manage-profile" element={<ProfileManagement />} />
                             <Route path="account-manager" element={<AccountManager />} />
                             <Route path="bank-details" element={<BankDetails />} />
-                            <Route path="business-details" element={<BusinessDetailsCard />} />
+                            <Route path="business-details" element={<BuisnessDetails />} />
                             <Route path="settings" element={<Settingss />} />
                             <Route path="calendar" element={<CalendarPage />} />
                             <Route path="partners" element={<Partners />} />
