@@ -1,0 +1,29 @@
+# Env & Spring Boot files
+.env
+*.env
+*.properties
+*.yml
+*.yaml
+*.xml
+*.gradle
+*.java
+target/
+build/
+
+# Turborepo-specific
+node_modules/
+dist/
+out/
+.cache/
+turbo/
+**/.turbo/
+**/node_modules/
+**/dist/
+**/build/
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Misc
+*.log
+.DS_Store

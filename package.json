@@ -1,0 +1,20 @@
+{
+  "name": "rental-e-commerce",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently -n auth -c green \"cd auth && yarn start\"",
+    "dev": "concurrently -n auth -c green \"cd auth && yarn dev\"",
+    "sonar-scan": "sonar-scanner"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "concurrently": "^9.1.2",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}
