@@ -9,6 +9,7 @@ import {
     Landmark,
     Shield,
     BadgeCheck,
+    Receipt,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,6 +54,8 @@ const editBankDetailsSchema = z.object({
     branch: z.string().min(2, 'Branch must be at least 2 characters'),
     swiftCode: z.string().min(8, 'SWIFT code must be at least 8 characters'),
     currency: z.string().min(1, 'Currency is required'),
+    gstNumber: z.string().min(15, 'GST number must be 15 characters').max(15, 'GST number must be 15 characters').optional(),
+    gstVerified: z.boolean().optional(),
 });
 
 const addBankAccountSchema = z.object({
@@ -63,12 +66,13 @@ const addBankAccountSchema = z.object({
     swiftCode: z.string().min(8, 'SWIFT code must be at least 8 characters'),
     currency: z.string().min(1, 'Currency is required'),
     routingNumber: z.string().min(8, 'Routing number must be at least 8 characters'),
+    gstNumber: z.string().min(15, 'GST number must be 15 characters').max(15, 'GST number must be 15 characters').optional(),
 });
 
 type EditBankDetailsFormValues = z.infer<typeof editBankDetailsSchema>;
 type AddBankAccountFormValues = z.infer<typeof addBankAccountSchema>;
 
-export function BankDetails() {
+export default function BankDetails() {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [addAccountModalOpen, setAddAccountModalOpen] = useState(false);
     const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -77,7 +81,7 @@ export function BankDetails() {
         height: typeof window !== 'undefined' ? window.innerHeight : 800,
     });
 
-    const MIN_CARD_SIZE = { width: 350, height: 400 };
+    const MIN_CARD_SIZE = { width: 650, height: 700 };
     const MAX_CARD_SIZE = { width: 800, height: 700 };
 
     // Calculate initial positions based on window width
@@ -120,6 +124,8 @@ export function BankDetails() {
         lastTransaction: 'May 10, 2023',
         monthlyLimit: '$500,000',
         transactionsThisMonth: 42,
+        gstNumber: '22AAAAA0000A1Z5',
+        gstVerified: true,
     });
 
     const editForm = useForm<EditBankDetailsFormValues>({
@@ -131,6 +137,7 @@ export function BankDetails() {
             branch: bankDetails.branch,
             swiftCode: bankDetails.swiftCode,
             currency: bankDetails.currency,
+            gstNumber: bankDetails.gstNumber,
         },
     });
 
@@ -144,6 +151,7 @@ export function BankDetails() {
             swiftCode: '',
             currency: 'USD',
             routingNumber: '',
+            gstNumber: '',
         },
     });
 
@@ -177,6 +185,7 @@ export function BankDetails() {
             ...bankDetails,
             ...data,
             isVerified: false,
+            gstVerified: data.gstNumber === bankDetails.gstNumber ? bankDetails.gstVerified : false,
         });
         setEditModalOpen(false);
         toast.success('Bank details updated', {
@@ -572,13 +581,17 @@ export function BankDetails() {
                                     branch: 'Branch',
                                     swiftCode: 'SWIFT Code',
                                     currency: 'Currency',
+                                    gstNumber: 'GST Number',
                                 }).map(([key, label]) => (
                                     <div key={key} className="flex justify-between">
                                         <span className="text-sm font-medium text-gray-500">
                                             {label}
                                         </span>
-                                        <span className="text-sm font-medium text-teal-800">
+                                        <span className="text-sm font-medium text-teal-800 flex items-center gap-1">
                                             {bankDetails[key as keyof typeof bankDetails]}
+                                            {key === 'gstNumber' && bankDetails.gstVerified && (
+                                                <BadgeCheck className="h-4 w-4 text-emerald-500" />
+                                            )}
                                         </span>
                                     </div>
                                 ))}
@@ -665,6 +678,7 @@ export function BankDetails() {
                                 branch: 'Branch',
                                 swiftCode: 'SWIFT Code',
                                 currency: 'Currency',
+                                gstNumber: 'GST Number',
                             }).map(([name, label]) => (
                                 <FormField
                                     key={name}
@@ -674,7 +688,11 @@ export function BankDetails() {
                                         <FormItem>
                                             <FormLabel>{label}</FormLabel>
                                             <FormControl>
-                                                <Input placeholder={label} {...field} />
+                                                <Input 
+                                                    placeholder={label} 
+                                                    {...field} 
+                                                    className={name === 'gstNumber' ? 'uppercase' : ''}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -722,6 +740,7 @@ export function BankDetails() {
                                 swiftCode: 'SWIFT Code',
                                 currency: 'Currency',
                                 routingNumber: 'Routing Number',
+                                gstNumber: 'GST Number',
                             }).map(([name, label]) => (
                                 <FormField
                                     key={name}
@@ -731,7 +750,11 @@ export function BankDetails() {
                                         <FormItem>
                                             <FormLabel>{label}</FormLabel>
                                             <FormControl>
-                                                <Input placeholder={label} {...field} />
+                                                <Input 
+                                                    placeholder={label} 
+                                                    {...field} 
+                                                    className={name === 'gstNumber' ? 'uppercase' : ''}
+                                                />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -788,6 +811,12 @@ export function BankDetails() {
                                         <span>
                                             Official bank letter with account details (on bank
                                             letterhead)
+                                        </span>
+                                    </li>
+                                    <li className="flex items-start gap-2">
+                                        <Check className="h-4 w-4 text-purple-500 flex-shrink-0 mt-0.5" />
+                                        <span>
+                                            GST certificate (for GST verification)
                                         </span>
                                     </li>
                                 </ul>

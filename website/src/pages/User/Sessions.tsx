@@ -19,6 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 
 export default function Sessions() {
   // State for card dimensions and position
@@ -29,9 +30,14 @@ export default function Sessions() {
     y: 50,
   });
 
+  // State for modal
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [revokingSession, setRevokingSession] = useState<string | null>(null);
+
   // Refs and controls
   const constraintsRef = useRef<HTMLDivElement>(null);
   const dragControls = useDragControls();
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // Sessions data
   const sessions = [
@@ -71,12 +77,53 @@ export default function Sessions() {
   }, []);
 
   const handleResize = useCallback((dx: number, dy: number) => {
-    setDimensions(prev => ({
-      ...prev,
-      width: Math.min(Math.max(800, prev.width + dx), 1400),
-      height: Math.min(Math.max(600, prev.height + dy), 1200),
-    }));
+    setDimensions(prev => {
+      const newWidth = Math.min(Math.max(800, prev.width + dx), 1400);
+      const newHeight = Math.min(Math.max(600, prev.height + dy), 1200);
+      
+      // Adjust position to prevent card from going off-screen when resizing
+      const containerWidth = constraintsRef.current?.clientWidth || window.innerWidth;
+      const containerHeight = constraintsRef.current?.clientHeight || window.innerHeight;
+      
+      let newX = prev.x;
+      let newY = prev.y;
+      
+      if (prev.x + newWidth > containerWidth) {
+        newX = containerWidth - newWidth - 20; // 20px padding
+      }
+      
+      if (prev.y + newHeight > containerHeight) {
+        newY = containerHeight - newHeight - 20; // 20px padding
+      }
+      
+      return {
+        width: newWidth,
+        height: newHeight,
+        x: Math.max(0, newX),
+        y: Math.max(0, newY),
+      };
+    });
   }, []);
+
+  const handleRevokeSession = (sessionId: string) => {
+    setRevokingSession(sessionId);
+  };
+
+  const handleLogoutAll = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogoutAll = () => {
+    // Implement actual logout logic here
+    console.log("Logging out all other sessions");
+    setShowLogoutModal(false);
+  };
+
+  const confirmRevokeSession = () => {
+    // Implement actual revoke logic here
+    console.log(`Revoking session ${revokingSession}`);
+    setRevokingSession(null);
+  };
 
   return (
     <div
@@ -84,6 +131,7 @@ export default function Sessions() {
       className="relative h-screen w-full bg-muted/40 p-4 overflow-hidden"
     >
       <motion.div
+        ref={cardRef}
         drag
         dragControls={dragControls}
         dragConstraints={constraintsRef}
@@ -95,7 +143,7 @@ export default function Sessions() {
           x: dimensions.x,
           y: dimensions.y,
         }}
-        className="absolute bg-background rounded-2xl shadow-xl border overflow-hidden"
+        className="absolute bg-background rounded-2xl shadow-xl border overflow-hidden flex flex-col"
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
@@ -103,7 +151,7 @@ export default function Sessions() {
         <Card className="h-full w-full flex flex-col">
           <CardHeader
             onPointerDown={(e) => dragControls.start(e)}
-            className="cursor-move border-b p-4"
+            className="cursor-move border-b p-4 select-none"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -121,7 +169,11 @@ export default function Sessions() {
             <section className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold">Active Sessions ({sessions.length})</h3>
-                <Button variant="destructive" size="sm">
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  onClick={handleLogoutAll}
+                >
                   Log Out All Other Devices
                 </Button>
               </div>
@@ -159,6 +211,7 @@ export default function Sessions() {
                             size="sm"
                             disabled={session.status === "active"}
                             className="h-8"
+                            onClick={() => handleRevokeSession(session.id)}
                           >
                             Revoke
                           </Button>
@@ -228,6 +281,46 @@ export default function Sessions() {
           />
         </Card>
       </motion.div>
+
+      {/* Logout All Modal */}
+      <Dialog open={showLogoutModal} onOpenChange={setShowLogoutModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Log Out All Other Sessions?</DialogTitle>
+            <DialogDescription>
+              This will log you out from all other devices except this one. Are you sure you want to continue?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowLogoutModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmLogoutAll}>
+              Log Out All
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Revoke Session Modal */}
+      <Dialog open={!!revokingSession} onOpenChange={(open) => !open && setRevokingSession(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Revoke Session?</DialogTitle>
+            <DialogDescription>
+              This will immediately log out the selected device. Are you sure you want to revoke this session?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRevokingSession(null)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmRevokeSession}>
+              Revoke Session
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

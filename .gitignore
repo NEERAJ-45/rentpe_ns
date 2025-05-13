@@ -39,3 +39,4 @@ yarn-error.log*
 
 #sonarqube files
 .scannerwork
+re.zip

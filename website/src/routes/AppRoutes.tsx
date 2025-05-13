@@ -10,7 +10,7 @@ import UserLayout from '@/pages/User/UserLayout';
 import AccountDashboard from '@/pages/User/ProfileDashboard';
 import { ProfileManagement } from '@/pages/User/ProfileManagement';
 import { AccountManager } from '@/pages/User/AccountManager';
-import { BankDetails } from '@/pages/User/BankDetails';
+import  BankDetails  from '@/pages/User/BankDetails';
 // import { Settings } from '@/pages/User/Settings';
 import  CalendarPage  from '@/pages/User/Calendar';
 import  Partners  from '@/pages/User/Partner';
