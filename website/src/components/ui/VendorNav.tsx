@@ -172,12 +172,12 @@ const VendorNav: React.FC = () => {
 
           {/* Right section - Search and actions */}
           <div className="flex items-center space-x-3 sm:space-x-4">
-            <Button
+            {/* <Button
               variant="ghost"
               size="sm"
               className="hidden sm:flex items-center text-gray-600 hover:text-gray-900"
             >
-              {/* <HiOutlineQuestionMarkCircle className="h-5 w-5 mr-1" /> */}
+              <HiOutlineQuestionMarkCircle className="h-5 w-5 mr-1" />
               <span>Help</span>
             </Button>
 
@@ -186,14 +186,14 @@ const VendorNav: React.FC = () => {
               size="sm"
               className="hidden sm:flex items-center text-gray-600 hover:text-gray-900"
             >
-              {/* <HiOutlineChatAlt className="h-5 w-5 mr-1" /> */}
+              <HiOutlineChatAlt className="h-5 w-5 mr-1" />
               <span>Contact</span>
-            </Button>
+            </Button> */}
 
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 variant="default"
-                className="px-4 md:px-6 py-5 md:py-6 rounded-md md:rounded-full text-[16px] md:text-md font-semibold bg-gradient-to-r from-blue-600 to-blue-500 shadow-sm hover:from-blue-700 hover:to-blue-600"
+                className="px-4 md:px-6 py-5 md:py-6 rounded-sm text-[16px] md:text-md font-semibold bg-gradient-to-r from-blue-600 to-blue-500 shadow-sm hover:from-blue-700 hover:to-blue-600"
               >
                 Start Renting
               </Button>

@@ -35,7 +35,6 @@ export class ApiError extends Error {
       error: this.error,
       status: this.status,
       data: this.data,
-      ...(config.nodeENV !== "production" && { stack: this.stack }),
     };
   }
 }
@@ -55,26 +54,30 @@ export class ApiResponse<T>{
 }
 
 
-interface CustomError extends Error {
-  statuscode?: number;
-  status?: string;
-  stack?: string;
-}
-
 export const GlobalErrorHandler = (
-  error: CustomError,
+  error: Error,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const statuscode = error.statuscode || 500;
-  const message = error.message || "Something went wrong";
+
+  if(error instanceof ApiError){
+    if(config.nodeENV !== 'production'){
+      console.error(error.stack);
+    }
+  
+    res.status(error.statuscode).json(error.toJSON());
+  }
+
+  const statuscode = 500;
+  const message = "Something went wrong";
   const stack = error.stack;
 
-  res.status(statuscode).json({
-    status: statuscode,
-    message,
-    ...(config.nodeENV !== "production" && { stack }),
-  });
+  if(config.nodeENV !== 'production'){
+    console.error(error.message);
+    console.error(stack);
+  }
+
+  res.status(statuscode).json(new ApiError(statuscode, message, message, null))
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, User, Lock, Mail, ArrowRight, ChevronLeft, Smartphone } from 'lucide-react';
+import { ArrowRight, } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

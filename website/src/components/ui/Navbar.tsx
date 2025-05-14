@@ -17,13 +17,11 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { motion } from "framer-motion";
 import { ChevronDown, MapPinHouse, ShoppingCart } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useCategory } from "@/context/useCategoryContext";
+import { useCategory } from "@/hooks/useCategory";
 
 const Navbar: React.FC = () => {
 
-  // const { category, setCategory } = useCategory();
-
-  const { category, setCategory } = useCategory();
+  const { currentCategory, changeCategory } = useCategory();
 
 
 
@@ -100,7 +98,8 @@ const Navbar: React.FC = () => {
         {/* Search bar */}
         <div className="hidden md:flex flex-grow mx-2 max-w-2xl">
           <Select
-            onValueChange={(value) => setCategory(value)}
+            value={currentCategory}
+            onValueChange={(value) => changeCategory(value)}
           >
             <SelectTrigger className="w-fit text-sm text-black rounded-none border-r-1 focus:ring-0">
               <SelectValue placeholder="All Categories" />

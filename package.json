@@ -4,17 +4,38 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "postinstall": "husky",
     "start": "concurrently -n auth -c green \"cd auth && yarn start\"",
     "dev": "concurrently -n auth -c green \"cd auth && yarn dev\"",
-    "sonar-scan": "sonar-scanner"
+    "sonar-scan": "sonar-scanner",
+    "test": "cd auth && yarn test",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "format": "prettier --write ."
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/node": "^22.15.17",
+    "@eslint/js": "^9.26.0",
+    "@eslint/json": "^0.12.0",
     "concurrently": "^9.1.2",
-    "tailwindcss-animate": "^1.0.7"
-  }
+    "eslint": "^9.26.0",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.0.0",
+    "prettier": "3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

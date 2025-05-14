@@ -1,11 +1,12 @@
 // CategoryPage.tsx
 import React from 'react';
 import categoryLayouts from '@/config/categoryLayouts';
-import { useCategory } from '@/context/useCategoryContext';
+import { useCategory } from '@/hooks/useCategory';
 
 const CategoryPage = () => {
-  const { category } = useCategory();
-  const CategoryComponent = categoryLayouts[category] || (() => <div>Category Not Found</div>);
+  const { currentCategory } = useCategory();
+  console.log(currentCategory)
+  const CategoryComponent = categoryLayouts[currentCategory] || (() => <div>Category Not Found</div>);
 
   return (
     <React.Fragment>

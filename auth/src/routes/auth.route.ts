@@ -9,7 +9,7 @@ import {
     login,
     register,
     logout,
-    refreshToken
+    newAccessToken
 } from '../controllers/auth.controller';
 
 const router = express.Router();
@@ -18,6 +18,6 @@ router.post('/register', registerValidator, register);
 router.post('/login', loginValidator, login);
 router.get('/logout', authMiddleware, logout);
 // router.get('/user', authMiddleware);
-router.post('/refresh', refreshTokenValidator, refreshToken);
+router.post('/refresh', refreshTokenValidator, newAccessToken);
 
 export default router;
